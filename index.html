@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Для тебя, солнышко ♥</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    min-height: 100%;
+    height: 100%;
+  }
+
+  body {
+    background: radial-gradient(circle at 30% 15%, #1e1e3a 0%, #12122a 45%, #0a0a18 100%);
+    font-family: 'Segoe UI', 'Georgia', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    color: #f0e6d2;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(255,220,180,0.5), transparent),
+      radial-gradient(1px 1px at 70% 60%, rgba(255,220,180,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 85% 20%, rgba(255,220,180,0.4), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,220,180,0.3), transparent),
+      radial-gradient(1.5px 1.5px at 10% 70%, rgba(255,220,180,0.35), transparent);
+    pointer-events: none;
+    animation: twinkle 6s infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: 0.5; } to { opacity: 1; } }
+
+  .stage {
+    position: relative;
+    max-width: 720px;
+    width: 100%;
+    background: rgba(28, 28, 52, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 36px;
+    padding: 64px 48px 48px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,210,160,0.15);
+    border: 1px solid rgba(255,200,150,0.18);
+    min-height: 440px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .progress {
+    position: absolute;
+    top: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 9px;
+    z-index: 2;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,210,160,0.2);
+    transition: all 0.4s ease;
+  }
+  .dot.active {
+    background: #ffb88c;
+    box-shadow: 0 0 12px rgba(255,184,140,0.8);
+    transform: scale(1.3);
+  }
+  .dot.done { background: rgba(255,184,140,0.55); }
+
+  .screen {
+    display: none;
+    animation: fadeUp 0.7s cubic-bezier(0.2,0.8,0.2,1) forwards;
+    opacity: 0;
+  }
+  .screen.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .text {
+    font-size: 1.22rem;
+    line-height: 1.85;
+    color: #ece1d3;
+    margin-bottom: 28px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .text.highlight { color: #ffe0c2; }
+  .text em { color: #ffcf9a; font-style: normal; }
+  .text .soft { color: #c9b6a0; font-style: italic; }
+  .text.love {
+    font-size: 1.35rem;
+    color: #ffd7b0;
+    text-align: center;
+    line-height: 2;
+  }
+
+  .heart {
+    text-align: center;
+    font-size: 2rem;
+    color: #ff8a7a;
+    margin: 6px 0 22px;
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.12); }
+    100% { opacity: 0.55; transform: scale(1); }
+  }
+
+  .btn-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+  .btn {
+    background: transparent;
+    border: 1.5px solid #ffb88c;
+    color: #ffcf9a;
+    padding: 14px 44px;
+    font-size: 1.1rem;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Georgia', serif;
+    letter-spacing: 1px;
+    box-shadow: 0 0 20px rgba(255,180,100,0.1);
+    width: fit-content;
+    max-width: 100%;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+  }
+  .btn:hover {
+    background: #ffb88c;
+    color: #16162a;
+    box-shadow: 0 0 42px rgba(255,180,100,0.55);
+    transform: translateY(-2px);
+  }
+  .btn.ghost {
+    border-color: rgba(255,200,150,0.35);
+    color: #c9b6a0;
+    font-size: 0.95rem;
+    padding: 11px 30px;
+  }
+  .btn.ghost:hover {
+    background: rgba(255,200,150,0.12);
+    color: #ffe0c2;
+    box-shadow: none;
+  }
+
+  .final-block { text-align: center; }
+  .final-block .big-love {
+    font-size: 1.5rem;
+    color: #ffd7b0;
+    line-height: 1.9;
+    margin-bottom: 12px;
+  }
+  .final-block .sub {
+    font-size: 1.02rem;
+    color: #c9b6a0;
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+  .final-block .choice {
+    font-size: 1rem;
+    color: #d8c7b4;
+    margin-bottom: 20px;
+  }
+
+  .signature {
+    margin-top: 32px;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(255,200,150,0.18);
+    text-align: right;
+    font-style: italic;
+    font-size: 0.92rem;
+    color: #a8957e;
+  }
+  .signature span { color: #ffb88c; }
+
+  .thanks {
+    text-align: center;
+    color: #ffe0c2;
+    font-size: 1.25rem;
+    line-height: 1.9;
+  }
+  .thanks .heart { margin-top: 20px; }
+
+  /* ================= МОБИЛЬНАЯ ВЕРСИЯ ================= */
+  @media (max-width: 600px) {
+    body {
+      align-items: flex-start;
+      padding: 10px;
+      min-height: 100dvh;
+    }
+
+    .stage {
+      min-height: calc(100dvh - 20px);
+      padding: 70px 22px 34px;
+      border-radius: 26px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .progress {
+      top: 26px;
+      gap: 8px;
+    }
+    .dot { width: 7px; height: 7px; }
+
+    .text {
+      font-size: 1.02rem;
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+    .text.love {
+      font-size: 1.14rem;
+      line-height: 1.85;
+    }
+    .final-block .big-love {
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+    .final-block .sub {
+      font-size: 0.92rem;
+      margin-bottom: 24px;
+    }
+    .final-block .choice {
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .heart {
+      font-size: 1.8rem;
+      margin-bottom: 18px;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.05rem;
+      width: 100%;
+      max-width: 300px;
+      min-height: 52px;
+    }
+    .btn.ghost {
+      padding: 13px 26px;
+      font-size: 0.92rem;
+      min-height: 48px;
+    }
+
+    .btn-wrap { gap: 12px; }
+
+    .signature {
+      margin-top: 26px;
+      padding-top: 16px;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .thanks { font-size: 1.12rem; }
+  }
+
+  @media (max-width: 380px) {
+    .stage { padding: 64px 16px 28px; }
+    .text { font-size: 0.98rem; }
+    .text.love { font-size: 1.08rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="progress" id="progress"></div>
+
+  <!-- ЭКРАН 1 -->
+  <div class="screen active" data-screen="1">
+    <div class="heart">♥</div>
+    <div class="text love">
+      Знаешь, мне все эти дни очень плохо.<br>
+      Без шуток и лжи.
+    </div>
+    <div class="text" style="text-align:center; color:#c9b6a0; font-style:italic;">
+      Все мои мысли забиты тобой. Как ты, что с тобой…<br>
+      и как начать разговор, чтобы услышать не «угу», а тебя — тёплую.
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 2 -->
+  <div class="screen" data-screen="2">
+    <div class="text highlight">
+      Помнишь, как я поругался с мамой и <em>сорвался</em>, чтобы приехать к тебе?
+    </div>
+    <div class="text">
+      Если бы человек не переживал и не любил — он бы такое <em>не сделал никогда</em>.
+      И такое было не один раз, и будет, если понадобится.
+      Я всегда готов сорваться и приехать к тебе, радость моя.
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 3 -->
+  <div class="screen" data-screen="3">
+    <div class="text">
+      Да, попытки я делал. Но не чтобы удержать общение —<br>
+      а чтобы <em>хоть как-то начать разговор</em>.
+    </div>
+    <div class="text highlight" style="text-align:center; font-size:1.4rem;">
+      «Угу», «ага», «да», «всё ок», «всё нормально».
+    </div>
+    <div class="text">
+      И вот это <em>больнее всего било по мне</em> и бьёт даже сейчас.
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 4 -->
+  <div class="screen" data-screen="4">
+    <div class="text">
+      Я сколько раз спрашивал: <em>что мне сделать</em>, дабы ты увидела и поверила в мои чувства?
+      Но из раза в раз ты не давала мне ответа.
+    </div>
+    <div class="text highlight">
+      Может, пора уже открыть глаза и увидеть, что парень перед тобой
+      всегда искренен и делает всё, что в его силах.
+    </div>
+    <div class="text soft">
+      Да, может, я где-то нелепо проявляю заботу и любовь. Но все мы не идеальны.
+      И все мои попытки либо не видят, либо слушать не хотят.
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 5 -->
+  <div class="screen" data-screen="5">
+    <div class="text">
+      Ты говорила, что все мои чувства — полная ложь. Что я не люблю, не переживаю, не хочу быть с тобой и только вру.
+    </div>
+    <div class="text highlight" style="text-align:center;">
+      Но давай задумаемся. Просто задумаемся.
+    </div>
+    <div class="text">
+      Если бы мне было всё равно и я лишь врал тебе —<br>
+      <em>зачем мне было всё это делать?</em>
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 6 -->
+  <div class="screen" data-screen="6">
+    <div class="text">
+      Я бы не делал все эти сайтики, чтобы попробовать поднять и заставить улыбнуться свою девочку.
+      Я бы не срывался и не приезжал, когда очень скучал и хотел увидеть тебя.
+    </div>
+    <div class="text">
+      Не ждал бы каждого вечера и любой возможности хоть чуть-чуть побыть с тобой.
+      Не бежал бы скорее после всех дел домой, чтобы провести время с любимой.
+    </div>
+    <div class="text highlight" style="text-align:center; font-size:1.25rem;">
+      И если бы мне было и вправду похуй —<br>ты думаешь, я бы это всё делал?
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 7 -->
+  <div class="screen" data-screen="7">
+    <div class="text">
+      Почему мне не уйти было бы ещё в первый раз, когда ты говорила?
+    </div>
+    <div class="text highlight" style="text-align:center; font-size:1.3rem;">
+      Потому что я люблю и хочу быть с тобой.<br>
+      И мне не всё равно на тебя. И никогда не будет всё равно.
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 8 -->
+  <div class="screen" data-screen="8">
+    <div class="text">
+      Ты говоришь, что я вру и что бабник. Но ты даже не представляешь,
+      как я каждый день открываю телегу, дабы увидеть хоть что-то от тебя.
+    </div>
+    <div class="text">
+      А если не вижу — то закрываю, так как дальше не имеет значения ничего.
+      Я не предавал и не собираюсь предавать своё солнышко.
+    </div>
+    <div class="text soft">
+      И мои дни сейчас проходят только в формате: решение билетов, просмотр ютуба и тиктока,
+      если не учитывать вождение и время на парах.
+    </div>
+    <div class="btn-wrap">
+      <button class="btn" onclick="next()">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 9 — ФИНАЛ -->
+  <div class="screen" data-screen="9">
+    <div class="final-block">
+      <div class="heart">♥</div>
+      <div class="big-love">
+        Я очень люблю, ценю и скучаю по тебе, солнышко.
+      </div>
+      <div class="sub">
+        Знаешь, я крайне сомневаюсь, что ты дочитаешь до конца и поверишь.<br>
+        Но очень надеюсь на обратное.
+      </div>
+      <div class="choice">Что ты чувствуешь сейчас?</div>
+      <div class="btn-wrap">
+        <button class="btn" onclick="chooseTalk()">Хочу поговорить</button>
+        <button class="btn ghost" onclick="chooseTime()">Мне нужно время</button>
+      </div>
+    </div>
+    <div class="signature">
+      <span>Твой парень, который всегда сорвётся и приедет.</span>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 10 — «хочу поговорить» -->
+  <div class="screen" data-screen="10">
+    <div class="thanks">
+      <div class="heart">♥</div>
+      Я здесь.<br>
+      Напиши мне — и я отвечу сразу.
+      <div class="btn-wrap" style="margin-top:28px;">
+        <button class="btn" onclick="openTelegram()">Открыть телеграм</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН 11 — «нужно время» -->
+  <div class="screen" data-screen="11">
+    <div class="thanks">
+      <div class="heart">♥</div>
+      Понимаю.<br>
+      Я не буду давить.<br><br>
+      Я буду здесь, когда ты будешь готова.
+    </div>
+    <div class="signature" style="text-align:center; border:none; margin-top:26px;">
+      <span>Я никуда не ухожу.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const total = 9;
+  const progress = document.getElementById('progress');
+  let current = 1;
+
+  for (let i = 1; i <= total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 1 ? ' active' : '');
+    progress.appendChild(d);
+  }
+  const dots = document.querySelectorAll('.dot');
+
+  function updateProgress(step) {
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i + 1 === step);
+      d.classList.toggle('done', i + 1 < step);
+    });
+  }
+
+  function next() {
+    const cur = document.querySelector('.screen.active');
+    const curNum = parseInt(cur.dataset.screen);
+    const nextScreen = document.querySelector(`.screen[data-screen="${curNum + 1}"]`);
+    if (!nextScreen) return;
+
+    cur.classList.remove('active');
+    nextScreen.classList.add('active');
+    current = curNum + 1;
+    if (current <= total) updateProgress(current);
+    else progress.style.opacity = '0';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function chooseTalk() {
+    document.querySelector('.screen.active').classList.remove('active');
+    document.querySelector('.screen[data-screen="10"]').classList.add('active');
+    progress.style.opacity = '0';
+  }
+
+  function chooseTime() {
+    document.querySelector('.screen.active').classList.remove('active');
+    document.querySelector('.screen[data-screen="11"]').classList.add('active');
+    progress.style.opacity = '0';
+  }
+
+  function openTelegram() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = 'tg://';
+      setTimeout(() => {
+        window.open('https://web.telegram.org/', '_blank');
+      }, 1200);
+    } else {
+      window.open('https://web.telegram.org/', '_blank');
+    }
+  }
+</script>
+
+</body>
+</html>
